@@ -22,13 +22,7 @@ def split_relations(curr_rel, fds_dict, rel_superkey, rel_foreignkey)->list:
         rel_foreignkey[frozenset(curr_rel)] = set()
     for lhs, rhs in fds_dict.items():
         valid_rhs = rhs&curr_rel
-        if frozenset(curr_rel) == frozenset(['License #', 'Address', 'Inspection Type', 'AKA Name', 'Inspection Date', 'Violations', 'Latitude', 'Inspection ID', 'Results', 'Facility Type', 'Risk', 'DBA Name']):
-            print('--------------------------------')
-            print('try to find good lhs and rhs : ', lhs, rhs)
-            print('valid rhs: ',valid_rhs)
         if lhs.issubset(curr_rel) and bool(valid_rhs) : # 只要这个fd在当前关系内，就需要保证它左边是超键。
-            if frozenset(curr_rel) == frozenset(['License #', 'Address', 'Inspection Type', 'AKA Name', 'Inspection Date', 'Violations', 'Latitude', 'Inspection ID', 'Results', 'Facility Type', 'Risk', 'DBA Name']):        
-                print('succeed : ',lhs, valid_rhs)
             if not is_superkey(lhs, fds_dict, curr_rel):
                 new_rel_A = lhs|(valid_rhs)
                 new_rel_B = curr_rel.difference(valid_rhs)
@@ -62,8 +56,8 @@ fds_dict = fds.groupby('lhs')['rhs'].agg(lambda x: frozenset.union(*x)).to_dict(
 rel_sk = {}
 rel_fk = {}
 all_rel = split_relations(all_attrs, fds_dict, rel_sk, rel_fk)
-print('-----------------super keys ----------------')
 print(all_rel)
+print('-----------------super keys ----------------')
 for rel in all_rel:
     print(rel, "---------", rel_sk[frozenset(rel)])
     # print("================================================")
